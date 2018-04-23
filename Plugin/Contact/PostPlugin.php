@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
+<?php
 /**
  * 2011-2018 PH2M
  *
@@ -14,13 +13,21 @@
  * @copyright 2011-2018 PH2M
  * @license http://www.opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <customer>
-            <phcaptcha>
-                <enable>0</enable>
-            </phcaptcha>
-        </customer>
-    </default>
-</config>
+
+namespace PH2M\Captcha\Plugin\Contact;
+
+/**
+ * Class PostPlugin
+ * @package PH2M\Captcha\Plugin\Contact
+ */
+class PostPlugin extends \PH2M\Captcha\Plugin\CaptchaPlugin
+{
+    /**
+     * @param \Magento\Contact\Controller\Post $subject
+     * @return \Magento\Framework\Controller\Result\Redirect|void
+     */
+    public function beforeExecute(\Magento\Contact\Controller\Index\Post $subject)
+    {
+        return $this->validateCaptcha($subject);
+    }
+}

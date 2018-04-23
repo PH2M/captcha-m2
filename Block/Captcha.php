@@ -26,9 +26,9 @@ use Magento\Store\Model\ScopeInterface;
  */
 class Captcha extends Template
 {
+    const XML_PATH_ENABLE = 'customer/phcaptcha/enable';
     const XML_PATH_SITE_KEY = 'customer/phcaptcha/site_key';
     const XML_PATH_SECRET_KEY = 'customer/phcaptcha/secret_key';
-    const XML_PATH_CUSTOMER_ACCOUNT_BUTTON_SELECTOR = 'customer/phcaptcha/customer_account_create_button_selector';
 
     /**
      * @return string
@@ -49,8 +49,8 @@ class Captcha extends Template
     /**
      * @return string
      */
-    public function getCustomerAccountButtonSelector()
+    public function isEnabled()
     {
-        return $this->getViewModel()->getScopeConfig()->getValue(self::XML_PATH_CUSTOMER_ACCOUNT_BUTTON_SELECTOR, ScopeInterface::SCOPE_STORE);
+        return $this->getViewModel()->getScopeConfig()->getValue(self::XML_PATH_ENABLE, ScopeInterface::SCOPE_STORE);
     }
 }

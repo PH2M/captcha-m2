@@ -36,12 +36,6 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
-                <field id="customer_account_create_button_selector" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Customer account create button selector</label>
-                    <depends>
-                        <field id="enable">1</field>
-                    </depends>
-                </field>
             </group>
         </section>
     </system>

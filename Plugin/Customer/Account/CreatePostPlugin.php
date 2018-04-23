@@ -14,22 +14,20 @@
  * @license http://www.opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/** @var $block \PH2M\Captcha\Block\Captcha */
-?>
-<script>
-    function onSubmit(token) {
-        console.log('submit form');
+namespace PH2M\Captcha\Plugin\Customer\Account;
+
+/**
+ * Class CreatePostPlugin
+ * @package PH2M\Captcha\Plugin\Customer\Account
+ */
+class CreatePostPlugin extends \PH2M\Captcha\Plugin\CaptchaPlugin
+{
+    /**
+     * @param \Magento\Customer\Controller\Account\CreatePost $subject
+     * @return \Magento\Framework\Controller\Result\Redirect|void
+     */
+    public function beforeExecute(\Magento\Customer\Controller\Account\CreatePost $subject)
+    {
+        return $this->validateCaptcha($subject);
     }
-
-    require([
-        'jquery'
-    ], function($){
-        var submitButton = $('<?php echo $block->getCustomerAccountButtonSelector() ?>');
-
-        if (submitButton.length > 0) {
-            submitButton.addClass('g-recaptcha')
-                .attr('data-sitekey', '<?php echo $block->getSiteKey() ?>')
-                .attr('data-callback', 'onSubmit');
-        }
-    });
-</script>
+}

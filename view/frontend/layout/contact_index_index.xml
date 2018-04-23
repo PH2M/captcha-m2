@@ -20,8 +20,8 @@
         <referenceContainer name="head.additional">
             <block ifconfig="customer/phcaptcha/enable" class="Magento\Framework\View\Element\Template" name="ph2m.captcha.head" template="PH2M_Captcha::captcha/head.phtml" />
         </referenceContainer>
-        <referenceBlock name="customer_form_register">
-            <block class="PH2M\Captcha\Block\Captcha" name="ph2m.captcha.button" template="PH2M_Captcha::captcha/customer/create/button.phtml">
+        <referenceBlock name="contactForm">
+            <block class="PH2M\Captcha\Block\Captcha" name="ph2m.captcha.button" template="PH2M_Captcha::captcha/contact/form/button.phtml">
                 <arguments>
                     <argument name="view_model" xsi:type="object">PH2M\Captcha\ViewModel\Captcha</argument>
                 </arguments>
