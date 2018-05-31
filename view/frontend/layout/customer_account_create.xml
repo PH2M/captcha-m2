@@ -18,14 +18,14 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="head.additional">
-            <block ifconfig="customer/phcaptcha/enable" class="Magento\Framework\View\Element\Template" name="ph2m.captcha.head" template="PH2M_Captcha::captcha/head.phtml" />
+            <block ifconfig="customer/phcaptcha/enable" class="Magento\Framework\View\Element\Template" name="ph2m.captcha.head" template="PH2M_Captcha::head.phtml" />
         </referenceContainer>
-        <referenceBlock name="customer_form_register">
-            <block class="PH2M\Captcha\Block\Captcha" name="ph2m.captcha.button" template="PH2M_Captcha::captcha/customer/create/button.phtml">
+        <referenceContainer name="form.additional.info">
+            <block class="PH2M\Captcha\Block\Captcha" name="ph2m.captcha.body" template="PH2M_Captcha::body.phtml">
                 <arguments>
                     <argument name="view_model" xsi:type="object">PH2M\Captcha\ViewModel\Captcha</argument>
                 </arguments>
             </block>
-        </referenceBlock>
+        </referenceContainer>
     </body>
 </page>

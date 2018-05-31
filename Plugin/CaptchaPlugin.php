@@ -50,10 +50,11 @@ class CaptchaPlugin
     private $redirect;
 
     /**
-     * CreatePostPlugin constructor.
+     * CaptchaPlugin constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param ManagerInterface $messageManager
      * @param RedirectFactory $redirectFactory
+     * @param RedirectInterface $redirect
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -69,9 +70,9 @@ class CaptchaPlugin
 
     /**
      * @param \Magento\Framework\App\Action\Action $subject
-     * @return \Magento\Framework\Controller\Result\Redirect|void
+     * @return bool
      */
-    protected function validateCaptcha($subject)
+    protected function isCaptchaValid($subject)
     {
         if(!$this->scopeConfig->getValue(Captcha::XML_PATH_ENABLE, ScopeInterface::SCOPE_STORE)){ return; }
         if(!$secretKey = $this->scopeConfig->getValue(Captcha::XML_PATH_SECRET_KEY)){ return; }
@@ -79,7 +80,7 @@ class CaptchaPlugin
         $captcha = $subject->getRequest()->getPost('g-recaptcha-response');
 
         if(!$captcha){
-            return $this->redirectError(__('Invalid CAPTCHA'));
+            return false;
         }
 
         $data = ['secret' => $secretKey, 'response' => $captcha];
@@ -94,20 +95,22 @@ class CaptchaPlugin
             $response = json_decode(curl_exec($verify));
 
             if (!$response || !$response->success) {
-                return $this->redirectError(__('An error occurred, please retry.'));
+                return false;
             }
         } catch (Exception $e) {
-            return $this->redirectError(__('An error occurred, please retry.'));
+            return false;
         }
+
+        return true;
     }
 
     /**
      * @param $errorMessage
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    private function redirectError($errorMessage)
+    public function redirectError()
     {
-        $this->messageManager->addErrorMessage($errorMessage);
+        $this->messageManager->addErrorMessage(__('Invalid CAPTCHA'));
 
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();

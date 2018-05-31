@@ -16,6 +16,12 @@
 
 namespace PH2M\Captcha\Plugin\Customer\Account;
 
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Customer\Model\Session;
+
 /**
  * Class CreatePostPlugin
  * @package PH2M\Captcha\Plugin\Customer\Account
@@ -23,11 +29,42 @@ namespace PH2M\Captcha\Plugin\Customer\Account;
 class CreatePostPlugin extends \PH2M\Captcha\Plugin\CaptchaPlugin
 {
     /**
-     * @param \Magento\Customer\Controller\Account\CreatePost $subject
-     * @return \Magento\Framework\Controller\Result\Redirect|void
+     * @var Session
      */
-    public function beforeExecute(\Magento\Customer\Controller\Account\CreatePost $subject)
+    private $customerSession;
+
+    /**
+     * CreatePostPlugin constructor.
+     * @param Session $customerSession
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ManagerInterface $messageManager
+     * @param RedirectFactory $redirectFactory
+     * @param RedirectInterface $redirect
+     */
+    public function __construct(
+        Session $customerSession,
+        ScopeConfigInterface $scopeConfig,
+        ManagerInterface $messageManager,
+        RedirectFactory $redirectFactory,
+        RedirectInterface $redirect
+    ) {
+        $this->customerSession = $customerSession;
+
+        parent::__construct($scopeConfig, $messageManager, $redirectFactory, $redirect);
+    }
+
+    /**
+     * @param \Magento\Customer\Controller\Account\CreatePost $subject
+     * @param callable $proceed
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
+    public function aroundExecute(\Magento\Customer\Controller\Account\CreatePost $subject, callable $proceed)
     {
-        return $this->validateCaptcha($subject);
+        if ($this->isCaptchaValid($subject)) {
+            return $proceed();
+        } else {
+            $this->customerSession->setCustomerFormData($subject->getRequest()->getPostValue());
+            return $this->redirectError();
+        }
     }
 }
